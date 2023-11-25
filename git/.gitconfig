@@ -1,0 +1,13 @@
+[user]
+    name = Deepanshu Bhanot
+    email = deepanshu.bhanot@
+[core]
+    editor = nvim
+    autocrlf = input
+[push]
+    autoSetupRemote = true
+[alias]
+    pushf = push --force-with-lease
+    cp = cherry-pick
+    unstage = reset HEAD --
+    last = log -1 HEAD
