@@ -9,17 +9,61 @@ return {
   },
   -- Define keys here so they exist BEFORE the plugin loads
   keys = {
-    { "<leader>pf", function() require("telescope.builtin").find_files() end, desc = "Find Files" },
-    { "<C-p>", function() require("telescope.builtin").git_files() end, desc = "Git Files" },
-    { "<leader>?", function() require("telescope.builtin").oldfiles() end, desc = "Recent Files" },
-    { "<leader><space>", function() require("telescope.builtin").buffers() end, desc = "Buffers" },
-    { "<leader>sg", function() require("telescope.builtin").live_grep() end, desc = "Grep" },
-    { "<leader>sw", function() require("telescope.builtin").grep_string() end, desc = "Word" },
-    { "<leader>sn", function() require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") }) end, desc = "Config" },
+    {
+      "<leader>pf",
+      function()
+        require("telescope.builtin").find_files()
+      end,
+      desc = "Find Files",
+    },
+    {
+      "<C-p>",
+      function()
+        require("telescope.builtin").git_files()
+      end,
+      desc = "Git Files",
+    },
+    {
+      "<leader>?",
+      function()
+        require("telescope.builtin").oldfiles()
+      end,
+      desc = "Recent Files",
+    },
+    {
+      "<leader><space>",
+      function()
+        require("telescope.builtin").buffers()
+      end,
+      desc = "Buffers",
+    },
+    {
+      "<leader>sg",
+      function()
+        require("telescope.builtin").live_grep()
+      end,
+      desc = "Grep",
+    },
+    {
+      "<leader>sw",
+      function()
+        require("telescope.builtin").grep_string()
+      end,
+      desc = "Word",
+    },
+    {
+      "<leader>sn",
+      function()
+        require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
+      end,
+      desc = "Config",
+    },
     {
       "<leader>/",
       function()
-        require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false }))
+        require("telescope.builtin").current_buffer_fuzzy_find(
+          require("telescope.themes").get_dropdown({ winblend = 10, previewer = false })
+        )
       end,
       desc = "Buffer Search",
     },
@@ -38,8 +82,16 @@ return {
           },
         },
         vimgrep_arguments = {
-          "rg", "--color=never", "--no-heading", "--with-filename",
-          "--line-number", "--column", "--smart-case", "--hidden", "--glob", "!**/.git/*",
+          "rg",
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "--smart-case",
+          "--hidden",
+          "--glob",
+          "!**/.git/*",
         },
       },
       pickers = {

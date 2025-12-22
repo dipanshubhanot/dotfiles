@@ -1,6 +1,6 @@
 return {
   { "numToStr/Comment.nvim", opts = {} },
-  
+
   -- Snacks.nvim (for custom git previewer)
   { "folke/snacks.nvim", priority = 1000, lazy = false, opts = { terminal = {} } },
 

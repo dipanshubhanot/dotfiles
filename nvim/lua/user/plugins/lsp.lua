@@ -6,12 +6,23 @@ return {
     "williamboman/mason-lspconfig.nvim",
     "j-hui/fidget.nvim",
     "folke/neodev.nvim",
-    "saghen/blink.cmp", 
+    "saghen/blink.cmp",
   },
   config = function()
     require("mason").setup()
     require("neodev").setup()
     require("fidget").setup()
+
+    local is_managed_externally = os.getenv("NVIM_LSP_MANAGED_EXTERNALLY") == "true"
+    local servers = {
+      "clangd",
+      "lua_ls",
+      "marksman",
+      "nil_ls",
+      "pyright",
+      "rust_analyzer",
+      "taplo",
+    }
 
     local on_attach = function(_, bufnr)
       local nmap = function(keys, func, desc)
@@ -25,14 +36,20 @@ return {
 
     local capabilities = require("blink.cmp").get_lsp_capabilities()
 
+    function remove_all(t, value)
+      for i = #t, 1, -1 do
+        if t[i] == value then
+          table.remove(t, i)
+        end
+      end
+    end
+
     require("mason-lspconfig").setup({
-      ensure_installed = { "clangd", "lua_ls", "pyright", "rust_analyzer" },
-      -- handlers = {} -- Explicitly omitted as requested
+      ensure_installed = is_managed_externally and {} or servers,
     })
 
     local lspconfig = require("lspconfig")
 
-    -- 1. Clangd Manual Setup
     lspconfig.clangd.setup({
       on_attach = on_attach,
       capabilities = capabilities,
@@ -48,10 +65,13 @@ return {
         compilationDatabasePath = vim.fn.getcwd() .. "/build/clang15_debug/",
       },
     })
+    remove_all(servers, "clangd")
 
-    -- 2. Lua LS Manual Setup
     lspconfig.lua_ls.setup({
-      on_attach = on_attach,
+      on_attach = function(client, body)
+        client.server_capabilities.documentFormattingProvider = false
+        on_attach(client, body)
+      end,
       capabilities = capabilities,
       settings = {
         Lua = {
@@ -61,9 +81,9 @@ return {
         },
       },
     })
+    remove_all(servers, "lua_ls")
 
-    -- 3. Simple Servers
-    for _, server in ipairs({ "pyright", "rust_analyzer", "marksman" }) do
+    for _, server in ipairs(servers) do
       lspconfig[server].setup({ on_attach = on_attach, capabilities = capabilities })
     end
   end,
