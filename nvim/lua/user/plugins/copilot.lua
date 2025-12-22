@@ -1,5 +1,4 @@
 return {
-  -- 1. Keep the official plugin for "Ghost Text" completions
   {
     "github/copilot.vim",
     cmd = "Copilot",
@@ -14,7 +13,6 @@ return {
     end,
   },
 
-  -- 2. CodeCompanion.nvim (The "Cursor-like" Interface)
   {
     "olimorris/codecompanion.nvim",
     -- 🛑 PINS version to v17.33.0 to FIX the warning you saw
