@@ -1,0 +1,80 @@
+# ~/.config/starship.toml
+
+# Keep it tight
+add_newline = false
+
+# Left: Where am I, Git status, Prompt char
+format = """
+$directory\
+$git_branch\
+$git_status\
+$character"""
+
+# Right: Tool versions (only if files exist), Nix shell, Duration
+right_format = """
+$c\
+$rust\
+$python\
+$nix_shell\
+$cmd_duration\
+$time"""
+
+[directory]
+style = "bold blue"
+truncation_length = 3
+truncate_to_repo = true
+read_only = " 🔒"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
+
+[git_branch]
+format = "[$symbol$branch]($style) "
+symbol = " "
+style = "bold purple"
+
+[git_status]
+format = "[$all_status$ahead_behind]($style) "
+style = "bold red"
+conflicted = "🏳"
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+untracked = ""
+stashed = ""
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+[cmd_duration]
+min_time = 50
+format = "[$duration]($style) "
+style = "yellow"
+
+[nix_shell]
+format = "[$symbol]($style) "
+symbol = " "
+style = "bold blue"
+
+# --- Languages (Only symbol + version, no "via") ---
+
+[c]
+symbol = " "
+format = "[$symbol($version)]($style) "
+
+[rust]
+symbol = " "
+format = "[$symbol($version)]($style) "
+
+[python]
+symbol = " "
+format = "[$symbol($version)]($style) "
+
+[time]
+disabled = false
+format = "[$time]($style) "
+time_format = "%R" 
+style = "bold bright-black"
