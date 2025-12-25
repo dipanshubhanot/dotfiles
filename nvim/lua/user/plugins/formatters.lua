@@ -13,6 +13,7 @@ return {
           python = { "isort", "black" },
           bash = { "shfmt" },
           sh = { "shfmt" },
+          nix = {"alejandra"},
         },
 
         -- This options table applies to 'gq' and direct calls
