@@ -1,8 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
-add_newline = false
 
 format = """\
-$cmd_duration$line_break$line_break\
+$cmd_duration$line_break\
 [╭](bold overlay1)($conda)\
 $username$hostname:$directory\
 $git_branch\
@@ -21,24 +20,20 @@ $lua\
 $docker_context\
 $line_break$character"""
 
-# Move context that is "informational" to the right
-right_format = """
-$jobs\
-$battery\
-$time\
-$os\
-"""
+# right_format = """$git_state$git_metrics$git_commit"""
+right_format = """$all"""
+
 palette = 'nord'
 
 [palettes.nord]
-amber = "222"   # #f0c674 ≈ 222 (light gold/yellow)
+rosewater = "222"   # #f0c674 ≈ 222 (light gold/yellow)
 flamingo  = "167"   # #cc6666 ≈ 167 (pinkish red)
 pink      = "139"   # #b294bb ≈ 139 (light magenta)
 orange    = "180"   # #de935f ≈ 180 (tan/orange)
 red       = "167"   # #cc6666 ≈ 167 (same as flamingo)
 maroon    = "131"   # #a54242 ≈ 131 (darker red)
 peach     = "173"   # #d08770 ≈ 173 (light orange)
-yellow    = "222"   # #f0c674 ≈ 222 (same as amber)
+yellow    = "222"   # #f0c674 ≈ 222 (same as rosewater)
 green     = "109"   # #8abeb7 ≈ 109 (tealish green)
 teal      = "109"   # #8abeb7 ≈ 109 (same as green)
 sky       = "110"   # #81a2be ≈ 110 (sky blue)
@@ -61,22 +56,28 @@ crust     = "237"   # #434c5e ≈ 237 (darker gray)
 # OS Module
 [os]
 disabled = false
+style = "fg:text"
 
-[battery]
-full_symbol = "🔋 "
-charging_symbol = "⚡️ "
-discharging_symbol = "💀 "
-format = "[$symbol$percentage]($style) "
-[[battery.display]]
-threshold = 30
-style = "bold red"
-[[battery.display]]
-threshold = 100
-style = "green"
-
-[jobs]
-symbol = "⚙️"
-format = " [$symbol]($style) "
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = ""
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
 
 # Username Module
 [username]
@@ -87,7 +88,7 @@ format = '[ $user]($style)'
 
 [hostname]
 ssh_only = false 
-format = '[@$hostname](fg:amber)'
+format = '[@$hostname](fg:rosewater)'
 
 # Local IP Module
 [localip]
@@ -103,6 +104,13 @@ format = "[$path]($style)"
 truncation_length = 6
 truncate_to_repo=false
 truncation_symbol = "…/"
+
+# [directory.substitutions]
+# "Documents" = "󰈙 "
+# "Downloads" = " "
+# "Music" = "󰝚 "
+# "Pictures" = " "
+# "Developer" = "󰲋 "
 
 # Git Branch Module
 [git_branch]
@@ -224,16 +232,9 @@ format = """
 success_symbol = '[](fg:bold text)'
 error_symbol = '[×](fg:bold red)'
 
-# Symbol when in Normal Mode (after pressing Esc)
-vimcmd_symbol = "[❮](bold yellow)"
-vimcmd_replace_one_symbol = "[❮](bold purple)"
-vimcmd_replace_symbol = "[❮](bold purple)"
-vimcmd_visual_symbol = "[❮](bold yellow)"
-
 # Command Duration for previous command
 [cmd_duration]
 min_time = 5
 show_milliseconds = true
-format = "[⏱ $duration]($style)"
-style = "sky"
-
+format = "took ⏱ [$duration]($style) "
+style = "bold yellow"
