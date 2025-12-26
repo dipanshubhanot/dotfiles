@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
 # Dependencies: fzf, bat, ripgrep (rg), tmux, git
-# Usage: Source this file in your .bashrc or .zshrc
-#        source /path/to/fzf_utils.sh
+
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_CTRL_T_COMMAND='fd --type f'
+export FZF_ALT_C_COMMAND='fd --type d'
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
 
 # -----------------------------------------------------------------------------
 # 1. GIT: Checkout Branch or Tag
