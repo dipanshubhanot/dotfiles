@@ -92,23 +92,40 @@ rgc() {
 # -----------------------------------------------------------------------------
 tmux-switch() {
   [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
-  
+
   # 1. Direct switch if argument provided
   if [ $1 ]; then
     tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
   fi
-  
-  # 2. FZF Selection with Preview
-  # 'capture-pane -ep -t {}' dumps the colored content of the active pane in session {}
-  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf \
-    --exit-0 \
-    --height 40% \
-    --layout=reverse \
-    --border \
-    --ansi \
-    --preview 'tmux capture-pane -ep -t {}' \
-    --preview-window 'right:65%' \
-  ) && tmux $change -t "$session" || echo "No sessions found."
+
+  # 2. FZF Selection
+  # We use a custom separator '###' to separate the raw session name from the pretty display string.
+  # awk handles the creation of ANSI escape codes for colors (Blue=\033[1;34m, Green=\033[32m, Reset=\033[0m)
+  session=$(tmux list-sessions -F "#{session_name}|#{session_windows}|#{t:session_created}|#{session_attached}" 2>/dev/null | \
+    awk -F'|' '{
+      # $1=name, $2=windows, $3=created, $4=attached
+      attached_str = ($4==1) ? "\033[32m(attached)" : ""
+      # Output format: RawName###[Blue]Name[Reset]: Windows (created Date) [Green](attached)[Reset]
+      printf "%s###\033[1;34m%s\033[0m: %s windows (created %s) %s\033[0m\n", $1, $1, $2, $3, attached_str
+    }' | \
+    fzf \
+      --exit-0 \
+      --ansi \
+      --delimiter='###' \
+      --with-nth=2 \
+      --preview 'tmux capture-pane -ep -t {1}' \
+      --preview-window 'right:60%' \
+      --height 40% \
+      --layout=reverse \
+      --border \
+  )
+
+  # 3. Handle the switch
+  if [ -n "$session" ]; then
+    # We split by '###' and take the first part (the clean session name)
+    target=$(echo "$session" | awk -F'###' '{print $1}')
+    tmux $change -t "$target"
+  fi
 }
 # -----------------------------------------------------------------------------
 # 5. SYSTEM: View Environment Variables
