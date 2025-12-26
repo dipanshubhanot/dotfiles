@@ -1,80 +1,240 @@
-# ~/.config/starship.toml
+"$schema" = 'https://starship.rs/config-schema.json'
 
-# Keep it tight
-add_newline = false
-
-# Left: Where am I, Git status, Prompt char
-format = """
-$directory\
+format = """\
+$cmd_duration$line_break\
+[╭](bold overlay1)($conda)\
+$username$hostname:$directory\
 $git_branch\
 $git_status\
-$character"""
-
-# Right: Tool versions (only if files exist), Nix shell, Duration
-right_format = """
+$custom\
 $c\
 $rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
 $python\
-$nix_shell\
-$cmd_duration\
-$time"""
+$lua\
+$docker_context\
+$line_break$character"""
 
+# right_format = """$git_state$git_metrics$git_commit"""
+right_format = """$all"""
+
+palette = 'nord'
+
+[palettes.nord]
+rosewater = "222"   # #f0c674 ≈ 222 (light gold/yellow)
+flamingo  = "167"   # #cc6666 ≈ 167 (pinkish red)
+pink      = "139"   # #b294bb ≈ 139 (light magenta)
+orange    = "180"   # #de935f ≈ 180 (tan/orange)
+red       = "167"   # #cc6666 ≈ 167 (same as flamingo)
+maroon    = "131"   # #a54242 ≈ 131 (darker red)
+peach     = "173"   # #d08770 ≈ 173 (light orange)
+yellow    = "222"   # #f0c674 ≈ 222 (same as rosewater)
+green     = "109"   # #8abeb7 ≈ 109 (tealish green)
+teal      = "109"   # #8abeb7 ≈ 109 (same as green)
+sky       = "110"   # #81a2be ≈ 110 (sky blue)
+sapphire  = "110"   # #81a2be ≈ 110 (same as sky)
+blue      = "67"    # #5e81ac ≈ 67 (medium blue)
+lavender  = "139"   # #b48ead ≈ 139 (light magenta)
+text      = "253"   # #d8dee9 ≈ 253 (very light gray)
+subtext1  = "255"   # #e5e9f0 ≈ 255 (near white)
+subtext0  = "255"   # #eceff4 ≈ 255 (near white)
+overlay2  = "238"   # #4c566a ≈ 238 (dark gray)
+overlay1  = "237"   # #434c5e ≈ 237 (darker gray)
+overlay0  = "236"   # #3b4252 ≈ 236 (almost black)
+surface2  = "236"   # #2e3440 ≈ 236 (almost black)
+surface1  = "236"   # #2e3440 ≈ 236 (same)
+surface0  = "236"   # #2e3440 ≈ 236 (same)
+base      = "236"   # #2e3440 ≈ 236 (same)
+mantle    = "237"   # #3b4252 ≈ 237 (darker gray)
+crust     = "237"   # #434c5e ≈ 237 (darker gray)
+
+# OS Module
+[os]
+disabled = false
+style = "fg:text"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = ""
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+
+# Username Module
+[username]
+show_always = true
+style_user = "fg:blue"
+style_root = "fg:blue"
+format = '[ $user]($style)'
+
+[hostname]
+ssh_only = false 
+format = '[@$hostname](fg:rosewater)'
+
+# Local IP Module
+[localip]
+ssh_only = false
+style = "fg:surface0"
+format = '[ $localipv4 ]($style)'
+disabled = false
+
+# Directory Module
 [directory]
-style = "bold blue"
-truncation_length = 3
-truncate_to_repo = true
-read_only = " 🔒"
+style = "fg:peach"
+format = "[$path]($style)"
+truncation_length = 6
+truncate_to_repo=false
+truncation_symbol = "…/"
 
-[character]
-success_symbol = "[❯](bold green)"
-error_symbol = "[❯](bold red)"
-vimcmd_symbol = "[❮](bold green)"
+# [directory.substitutions]
+# "Documents" = "󰈙 "
+# "Downloads" = " "
+# "Music" = "󰝚 "
+# "Pictures" = " "
+# "Developer" = "󰲋 "
 
+# Git Branch Module
 [git_branch]
-format = "[$symbol$branch]($style) "
-symbol = " "
-style = "bold purple"
+symbol = ""
+style = "fg:teal"
+format = '[[ $symbol $branch ](fg:green)]($style)'
 
+# Git Status Module
 [git_status]
-format = "[$all_status$ahead_behind]($style) "
-style = "bold red"
-conflicted = "🏳"
-ahead = "⇡"
-behind = "⇣"
-diverged = "⇕"
-untracked = ""
-stashed = ""
-modified = "!"
-staged = "+"
-renamed = "»"
-deleted = "✘"
+style = "fg:teal"
+modified = '*'
+stashed = ''
+untracked = ''
+format = '[\[($all_status$ahead_behind)\](fg:green)]($style)'
 
-[cmd_duration]
-min_time = 50
-format = "[$duration]($style) "
-style = "yellow"
+[git_metrics]
+disabled = false
 
-[nix_shell]
-format = "[$symbol]($style) "
-symbol = " "
-style = "bold blue"
+[git_state]
+disabled = false
 
-# --- Languages (Only symbol + version, no "via") ---
+[git_commit]
+disabled = false
 
+[custom.git_tag]
+# Shows latest tag and number of commits since master
+command = """
+latest_tag=$(git describe --tags --abbrev=0 2>/dev/null)
+if [ -n "$latest_tag" ]; then
+  diff=$(git rev-list --count ${latest_tag}..HEAD 2>/dev/null)
+  diff_master=$(git rev-list --count origin/master..HEAD 2>/dev/null)
+  echo "$latest_tag (+$diff from tag, +$diff_master from master)"
+else
+  echo "(no tag)"
+fi
+"""
+when = "git rev-parse --is-inside-work-tree 2>/dev/null"
+format = ' [🏷  $output](bold peach) '
+
+# Node.js Module
+[nodejs]
+symbol = ""
+style = "fg:teal"
+format = '[[ $symbol( $version) ](fg:teal)]($style)'
+
+# C Module
 [c]
-symbol = " "
-format = "[$symbol($version)]($style) "
+symbol = ""
+style = "fg:teal"
+format = '[[ $symbol( $version) ](fg:teal)]($style)'
 
+# Conda Module
+[conda]
+format = '[$symbol$environment](fg:green) '
+
+# Rust Module
 [rust]
-symbol = " "
-format = "[$symbol($version)]($style) "
+symbol = ""
+style = "fg:teal"
+format = '[[ $symbol( $version) ](fg:teal)]($style)'
 
+# PHP Module
+[php]
+symbol = ""
+style = "fg:teal"
+format = '[[ $symbol( $version) ](fg:teal)]($style)'
+
+# Java Module
+[java]
+symbol = " "
+style = "fg:teal"
+format = '[[ $symbol( $version) ](fg:teal)]($style)'
+
+# Kotlin Module
+[kotlin]
+symbol = ""
+style = "fg:teal"
+format = '[[ $symbol( $version) ](fg:teal)]($style)'
+
+# Haskell Module
+[haskell]
+symbol = ""
+style = "fg:teal"
+format = '[[ $symbol( $version) ](fg:teal)]($style)'
+
+# Python Module
 [python]
-symbol = " "
-format = "[$symbol($version)]($style) "
+symbol = ""
+style = "fg:teal"
+format = '[[ $symbol( $venv )( $version ) ](fg:teal)]($style)'
 
+# Lua Module
+[lua]
+symbol = "󰢱"
+style = "fg:teal"
+format = '[[ $symbol( $version) ](fg:teal)]($style)'
+
+# Docker Context Module
+[docker_context]
+symbol = ""
+style = "fg:mantle"
+format = '[[ $symbol( $context) ](fg:color_bg3)]($style)'
+
+# Time Module
 [time]
 disabled = false
-format = "[$time]($style) "
-time_format = "%R" 
-style = "bold bright-black"
+time_format = "%R"
+style = "fg:peach"
+format = '[[  $time ](fg:purple)]($style)'
+
+# Line Break Module
+[line_break]
+disabled = false
+
+# Character Module
+[character]
+format = """
+[╰─$symbol](fg:overlay1) """
+success_symbol = '[](fg:bold text)'
+error_symbol = '[×](fg:bold red)'
+
+# Command Duration for previous command
+[cmd_duration]
+min_time = 5
+show_milliseconds = true
+format = "took ⏱ [$duration]($style) "
+style = "bold yellow"
